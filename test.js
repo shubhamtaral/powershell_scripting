@@ -1,1 +1,0 @@
-console.log('Node is Up, Will see you soon!');
