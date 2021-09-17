@@ -5,22 +5,25 @@ function renameFile {
     )
     
     $pattern = "[#':><?|%/\\]"
-    $backup = $fileFolderPath + '_Backup'
+    New-Item -Path $fileFolderPath -Name '_backup' -ItemType "directory"
 
     # Get BackUp
-    Write-Host "Backup Copy Files from $fileFolderPath to $backup ..."
-    Copy-Item -Path $fileFolderPath -Destination $backup -Recurse
-    
+    $Files = (Get-ChildItem -Exclude *.pdf, *.xlsx, *.bashrc, *.bash_logout, *.profile, *.docx, *.doc, *.pub, *.pptx, *.zip, *.JEPG $fileFolderPath | 
+        ForEach-Object { @{Path = $_.fullname } }).Values
+    foreach ($File in $Files) {
+        Copy-Item -Path $File -Destination $fileFolderPath/_backup 
+        Write-Host "Copied $File to $fileFolderPath/_backup ..."
+    }
     
     # Start Renaming all files (can add -Filter "*.pdf")
     Write-Host "Renaming Files from $fileFolderPath ..."
-    Get-ChildItem -File $fileFolderPath | 
-    Rename-Item –NewName { $_.name.trim() –replace $pattern ,'_' } -Force
-
-    # Adds ".pdf" ext to all files ecluding pdfs
-    Write-Host "Adding extention to Files from $fileFolderPath ..."
-    Get-ChildItem -Exclude "*.pdf" $fileFolderPath | 
-    Rename-Item –NewName { $_.name +".pdf" } -Force
+    Get-ChildItem -Exclude *.pdf, *.xlsx, *.bashrc, *.bash_logout, *.profile, *.docx, *.doc, *.pub, *.pptx, *.zip, *.JEPG $fileFolderPath | 
+    Rename-Item –NewName { $_.name.trim() –replace $pattern , '_' } -Force
+    
+    # Adds ".pdf" ext to all files ecluding pdfs
+    Write-Host "Adding extention to Files from $fileFolderPath ..."
+    Get-ChildItem -Exclude *.pdf, *.xlsx, *.bashrc, *.bash_logout, *.profile, *.docx, *.doc, *.pub, *.pptx, *.zip, *.JEPG $fileFolderPath | 
+    Rename-Item –NewName { $_.name + ".pdf" } -Force
 }
 
 # Provide Dir path as input to the function
