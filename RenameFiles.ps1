@@ -11,7 +11,8 @@ function renameFile {
 
     # Get BackUp
     Write-Host "=>INFO: Taking Backup of Files from $fileFolderPath Which needs a change..."
-    $Files = (Get-ChildItem -Exclude _backup, *.xlsx, *.bashrc, *.bash_logout, *.profile, *.docx, *.doc, *.pub, *.pptx, *.zip, *.JEPG $fileFolderPath | 
+    $Files = (Get-ChildItem -Exclude _backup, *.xlsx, *.bashrc, *.bash_logout, *.profile, *.docx, *.doc, *.pub, *.pptx, *.zip, *.JEPG $fileFolderPath |
+        Where-Object { $_.Name -match $pattern} |
         ForEach-Object { @{Path = $_.fullname } }).Values
     foreach ($File in $Files) {
         Copy-Item -Path $File -Destination $fileFolderPath/_backup 
