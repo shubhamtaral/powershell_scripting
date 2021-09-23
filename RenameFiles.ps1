@@ -13,6 +13,7 @@ function renameFile {
             [Parameter(Mandatory = $true)][System.Array] $Files
         )
         foreach ($File in $Files) {
+            # Use Robocopy, Check for file exsistace
             Copy-Item -Path $File -Destination $fileFolderPath/_backup 
             Write-Host "Copied $File to /_backup folder ..."
             $global:counter++
