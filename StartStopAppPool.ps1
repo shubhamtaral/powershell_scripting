@@ -1,4 +1,8 @@
 # Script to Start/Stop Application Pool 
+
+# Importing requried modules
+Import-Module WebAdministration
+
 function startStopApplicationPool {
     param (
         [Parameter(Mandatory = $true)][string] $action,
@@ -18,11 +22,15 @@ function startStopApplicationPool {
                 Start-WebAppPool -Name $applicationPoolName 
                 $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
                 Write-Host ('==>Status: {0} is now {1}!' -f $applicationPoolName, $appPoolStatus)
-                return $true
+            }
+            $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
+            if ($appPoolStatus -eq 'Starting') {
+                Write-Error ('==>Status: {0} is in {1} State' -f $applicationPoolName, $appPoolStatus)
+                throw
             }
             elseif ($appPoolStatus -eq 'Started') {
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
-                return $true
+                break
             }
         }
         catch {
@@ -37,13 +45,17 @@ function startStopApplicationPool {
             if ($appPoolStatus -ne 'Stopped') {
                 Write-Host ('==>INFO: Stopping Application Pool: {0}' -f $applicationPoolName)
                 Stop-WebAppPool -Name $applicationPoolName
-                throw 'xyz'
                 $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
                 Write-Host ('==>Status: {0} is now {1}!' -f $applicationPoolName, $appPoolStatus)
             }
+            $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
+            if ($appPoolStatus -eq 'Starting') {
+                Write-Error ('==>Status: {0} is in {1} State' -f $applicationPoolName, $appPoolStatus)
+                throw
+            }
             elseif ($appPoolStatus -eq 'Stopped') {
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
-                throw 'xyz'
+                break
             }
         }
         catch {
@@ -51,10 +63,7 @@ function startStopApplicationPool {
         }
     }
 
-    # we can use 'Start' 'Stop' keywards too
-    # if (keywards -eq Start){} elseif (keywards -eq Stop)
-
-    # Starts Application Pool when toStart = true
+    # Starts Application Pool when $actiom = 'Start'
     if ($action -eq "Start") {
         startAppPool
         if ($error){
@@ -67,9 +76,12 @@ function startStopApplicationPool {
             }
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
+        } else {
+            Write-Host ('==>INFO: Process Completed! Exiting now!')
+            break
         }
     }
-    # Stops Application Pool when toStop = true
+    # Stops Application Pool when $action = 'Stop'
     elseif ($action -eq "Stop") {
         stopAppPool
         if ($error){
@@ -82,6 +94,9 @@ function startStopApplicationPool {
             }
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
+        } else {
+            Write-Host ('==>INFO: Process Completed! Exiting now!')
+            break
         }
     }
     else {
@@ -91,4 +106,4 @@ function startStopApplicationPool {
 }
 
 # Calling Function with params <toStart> <toStop> <AppilicationPoolName>
-startStopApplicationPool 'Start' 'DefaultAppPool'
+startStopApplicationPool 'Stop' 'DefaultAppPool'
