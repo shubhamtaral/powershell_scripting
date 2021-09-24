@@ -28,9 +28,8 @@ function startStopApplicationPool {
                 Write-Error ('==>Status: {0} is in {1} State' -f $applicationPoolName, $appPoolStatus)
                 throw
             }
-            elseif ($appPoolStatus -eq 'Started') {
+            if ($appPoolStatus -eq 'Started') {
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
-                break
             }
         }
         catch {
@@ -49,13 +48,12 @@ function startStopApplicationPool {
                 Write-Host ('==>Status: {0} is now {1}!' -f $applicationPoolName, $appPoolStatus)
             }
             $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
-            if ($appPoolStatus -eq 'Starting') {
+            if ($appPoolStatus -eq 'Stopping') {
                 Write-Error ('==>Status: {0} is in {1} State' -f $applicationPoolName, $appPoolStatus)
                 throw
             }
-            elseif ($appPoolStatus -eq 'Stopped') {
+            if ($appPoolStatus -eq 'Stopped') {
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
-                break
             }
         }
         catch {
@@ -66,25 +64,25 @@ function startStopApplicationPool {
     # Starts Application Pool when $actiom = 'Start'
     if ($action -eq "Start") {
         startAppPool
-        if ($error){
+        if ($error -and $appPoolStatus -ne 'Started'){
             while ($currentAttempt -lt $maxAttempts) {
                 Write-Host ('==>Current Status: {0} is {1}!' -f $applicationPoolName, $appPoolStatus)
                 $currentAttempt++
                 Write-Host ('==>INFO: Attempt {0}, Next Attempt after {1} sec...' -f $currentAttempt, $retryInterval)
                 Start-Sleep -s $retryInterval
-                startAppPools
+                startAppPool
             }
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
         } else {
-            Write-Host ('==>INFO: Process Completed! Exiting now!')
+            Write-Host ('==>INFO:==>Current Status: {0} is {1}!  Process Completed! Exiting now!' -f $applicationPoolName, $appPoolStatus)
             break
         }
     }
     # Stops Application Pool when $action = 'Stop'
     elseif ($action -eq "Stop") {
         stopAppPool
-        if ($error){
+        if ($error -and $appPoolStatus -eq 'Stoped'){
             while ($currentAttempt -lt $maxAttempts) {
                 Write-Host ('==>Current Status: {0} is {1}!' -f $applicationPoolName, $appPoolStatus)
                 $currentAttempt++
@@ -95,7 +93,7 @@ function startStopApplicationPool {
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
         } else {
-            Write-Host ('==>INFO: Process Completed! Exiting now!')
+            Write-Host ('==>INFO:==>Current Status: {0} is {1}!  Process Completed! Exiting now!' -f $applicationPoolName, $appPoolStatus)
             break
         }
     }
