@@ -1,12 +1,12 @@
 USE [QA_CL_QA1_backup]
 GO
-/****** Object:  StoredProcedure [dbo].[AvailableClientsReadProductApi]    Script Date: 9/21/2021 7:03:15 AM ******/
+/****** Object:  StoredProcedure [dbo].[AvailableClientsReadProductApi]    Script Date: 9/27/2021 6:44:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[AvailableClientsReadProductApi]
+CREATE 	PROCEDURE [dbo].[AvailableClientsReadProductApi]
 	@ClientId INT = NULL,
 	@PageNo INT = 1 ,
 	@RecordsPerPage INT = 0,
