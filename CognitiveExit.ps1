@@ -23,10 +23,10 @@ function downloadFromAzStorage {
     # Download from specific container
     $containers = Get-AzStorageContainer -Context $storage_account | Where-Object { $_.Name -eq "$AzureBlobContainerName" }
  
-    Write-Host '==> INFO : Containers Found : ' $containers
-    Write-Host '==> INFO : Starting Storage Dump...'
+    $containers
+    Write-Host 'INFO==> Starting Storage Dump...'
     foreach ($container in $containers) {
-        Write-Host -NoNewline '==> INFO : Processing: ' . $container.Name . '...'
+        Write-Host -NoNewline 'INFO==> Processing: ' . $container.Name . '...'
     
         $blobs = Get-AzStorageBlob -Container $container.Name -Context $storage_account
 
@@ -35,26 +35,25 @@ function downloadFromAzStorage {
         new-item -ItemType "directory" -Path $container_path
 
         # Downloading files from every every folder
-        Write-Host -NoNewline '==> INFO : Downloading files...'
+        Write-Host -NoNewline 'INFO==> Downloading files...'
         foreach ($blob in $blobs) { 
-            # for specific folders uncomment following
-            # if ($blob.name.StartsWith('calendar') -or $blob.name.StartsWith('ocr-input')) { 
-                Write-Host '==> INFO : Now Downloading ' $blob.Name 
+            if ($blob.name.StartsWith('calendar') -or $blob.name.StartsWith('ocr-input')) { # for specific folders
+                Write-Host 'INFO==> Now Downloading ' $blob.Name 
                 $fileNameCheck = $container_path + '\' + $blob.Name 
                 if (!(Test-Path $fileNameCheck )) {
                     Get-AzStorageBlobContent -Container $container.Name -Blob $blob.Name -Destination $container_path -Context $storage_account
                 } 
-            # }
+            }
         } 
         Write-Host 'Done!'
     }
-    Write-Host '==> INFO : Download complete!'
+    Write-Host 'INFO==> Download complete!'
 
-    $elapsedTime = $(get-date) - $  
+    $elapsedTime = $(get-date) - $StartTime
 
     $totalTime = "{0:HH:mm:ss}" -f ([datetime]$elapsedTime.Ticks)
 
-    Write-Output "==> INFO : Time Taken:  $totalTime" | Out-String 
+    Write-Output "Time Taken:  $totalTime" | Out-String 
 }
 
 
