@@ -30,6 +30,7 @@ function startStopApplicationPool {
             }
             if ($appPoolStatus -eq 'Started') {
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
+                break
             }
         }
         catch {
@@ -49,11 +50,14 @@ function startStopApplicationPool {
             }
             $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
             if ($appPoolStatus -eq 'Stopping') {
+                $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
                 Write-Error ('==>Status: {0} is in {1} State' -f $applicationPoolName, $appPoolStatus)
                 throw
             }
             if ($appPoolStatus -eq 'Stopped') {
+                $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
                 Write-Host ('==>Status: {0} is already in {1} State' -f $applicationPoolName, $appPoolStatus)
+                break
             }
         }
         catch {
@@ -75,6 +79,7 @@ function startStopApplicationPool {
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
         } else {
+            $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
             Write-Host ('==>INFO:==>Current Status: {0} is {1}!  Process Completed! Exiting now!' -f $applicationPoolName, $appPoolStatus)
             break
         }
@@ -93,6 +98,7 @@ function startStopApplicationPool {
             Write-Host ('==>INFO: Attempt {0}, Maximum Attempts reached! Exiting now!' -f $currentAttempt)
             break
         } else {
+            $appPoolStatus = (Get-WebAppPoolState -Name $applicationPoolName).Value
             Write-Host ('==>INFO:==>Current Status: {0} is {1}!  Process Completed! Exiting now!' -f $applicationPoolName, $appPoolStatus)
             break
         }
@@ -104,4 +110,4 @@ function startStopApplicationPool {
 }
 
 # Calling Function with params <toStart> <toStop> <AppilicationPoolName>
-startStopApplicationPool 'Stop' 'DefaultAppPool'
+startStopApplicationPool 'Stop' '$(appname)'
