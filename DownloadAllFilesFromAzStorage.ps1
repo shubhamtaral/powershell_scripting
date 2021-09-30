@@ -35,14 +35,14 @@ function downloadFromAzStorage {
         new-item -ItemType "directory" -Path $container_path
 
         # Downloading files from every every folder
-        Write-Host -NoNewline '==> INFO : Downloading files...'
+        Write-Host '==> INFO : Downloading files...'
         foreach ($blob in $blobs) { 
             # for specific folders uncomment following
             # if ($blob.name.StartsWith('calendar') -or $blob.name.StartsWith('ocr-input')) { 
                 Write-Host '==> INFO : Now Downloading ' $blob.Name 
                 $fileNameCheck = $container_path + '\' + $blob.Name 
                 if (!(Test-Path $fileNameCheck )) {
-                    Get-AzStorageBlobContent -Container $container.Name -Blob $blob.Name -Destination $container_path -Context $storage_account
+                    Get-AzStorageBlobContent -Container $container.Name -Blob $blob.Name -Destination $container_path -Context $storage_account -Verbose
                 } 
             # }
         } 
@@ -50,7 +50,7 @@ function downloadFromAzStorage {
     }
     Write-Host '==> INFO : Download complete!'
 
-    $elapsedTime = $(get-date) - $  
+    $elapsedTime = $(get-date) - $StartTime
 
     $totalTime = "{0:HH:mm:ss}" -f ([datetime]$elapsedTime.Ticks)
 

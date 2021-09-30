@@ -1,6 +1,6 @@
 USE [QA_CL_QA1_backup]
 GO
-/****** Object:  StoredProcedure [dbo].[AvailableClientsReadProductApi]    Script Date: 9/27/2021 6:44:48 AM ******/
+/****** Object:  StoredProcedure [dbo].[AvailableClientsReadProductApi]    Script Date: 9/30/2021 5:09:56 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
