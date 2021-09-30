@@ -41,9 +41,9 @@ function CreateBACPAC {
     $NewestBacPacFile = Get-ChildItem -Path $dirName\$filename*.$ext | Sort-Object LastAccessTime -Descending | Select-Object -First 1
     $file = "$NewestBacPacFile"
  
-    Write-Host '==> INFO : BACPAC created : ' $FILE 
+    Write-Host '==> INFO : BACPAC created : ' $file 
 
-    ZipTheBACPACK "$FILE" "$BackupDirectory" "$DatabaseName"
+    ZipTheBACPACK "$file" "$BackupDirectory" "$DatabaseName"
 
 } 
 
