@@ -1,5 +1,5 @@
 ﻿# Install dependancies 
-Install-Module -Name Az --force
+Install-Module -Name Az 
 
 # Funtion to download files from AzStorage Blob/s
 function downloadFromAzStorage {
@@ -26,7 +26,7 @@ function downloadFromAzStorage {
     Write-Host '==> INFO : Containers Found : ' $containers
     Write-Host '==> INFO : Starting Storage Dump...'
     foreach ($container in $containers) {
-        Write-Host -NoNewline '==> INFO : Processing: ' . $container.Name . '...'
+        Write-Host '==> INFO : Processing: ' . $container.Name . '...'
     
         $blobs = Get-AzStorageBlob -Container $container.Name -Context $storage_account
 
@@ -42,7 +42,7 @@ function downloadFromAzStorage {
                 Write-Host '==> INFO : Now Downloading ' $blob.Name 
                 $fileNameCheck = $container_path + '\' + $blob.Name 
                 if (!(Test-Path $fileNameCheck )) {
-                    Get-AzStorageBlobContent -Container $container.Name -Blob $blob.Name -Destination $container_path -Context $storage_account -Verbose
+                    Get-AzStorageBlobContent -Container $container.Name -Blob $blob.Name -Destination $container_path -Context $storage_account
                 } 
             # }
         } 
