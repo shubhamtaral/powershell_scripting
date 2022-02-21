@@ -1,0 +1,116 @@
+USE [QA_CL_QA1_backup]
+GO
+/****** Object:  StoredProcedure [dbo].[AvailableClientsReadProductApi]    Script Date: 9/21/2021 7:03:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[AvailableClientsReadProductApi]
+	@ClientId INT = NULL,
+	@PageNo INT = 1 ,
+	@RecordsPerPage INT = 0,
+	@Search nvarchar(100)= '',
+	@SortColumn nvarchar(100)='',
+	@Direction INT = 0,
+	@ACN NVARCHAR(1000)=null,
+	@ABN NVARCHAR(1000)=null,
+	@TradingName NVARCHAR(1000)=null,
+	@TrustName NVARCHAR(1000)=null,
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+	DECLARE @RoleID nvarchar(50)
+SET @RoleID=(SELECT 'Role-'+Cast(MstRole.RoleID as varchar(10)) as 'RoleID' FROM MstUsers WITH (NOLOCK) INNER JOIN MstRole ON MstUsers.RoleId=MstRole.RoleId AND MstUsers.UsersId=@UserID)
+EXECUTE AS USER = @RoleID
+	IF @PageNo = 0 SET @PageNo = 1
+	IF @RecordsPerPage = 0 SET @RecordsPerPage = 25
+
+	IF OBJECT_ID('tempdb..#temp') IS NOT NULL DROP TABLE #temp
+
+
+		;WITH ClientCTE as (
+			SELECT
+			CL.ClientId,
+			CL.ClientName,
+			case when exists (select top 1 1 from ContractRequest cr with (nolock) where cr.ClientId = CL.ClientId) then 'Y' else 'N' end isUsed,			
+			CL.ClientTypeId,
+			CL.Addedon,
+			CL.isActive,
+			mct.ClientTypeName,
+			ISNULL(CL.JDENumber,'') JDENumber,
+			CL.ACN,
+			CL.ABN,
+			CL.TradingName,
+			CL.TrustName
+			
+			FROM Client CL
+				LEFT JOIN MstClientTypes mct on cl.ClientTypeId = mct.Id
+			    LEFT JOIN ClientContactDetails CCD
+						  ON cl.ClientId = CCD.ClientId 
+				LEFT JOIN ClientEmaildetails CED 
+						   ON cl.ClientId = CED.ClientId
+				LEFT JOIN ClientAddressDetails CAD 
+							ON CAD.ClientId = cl.ClientId
+				LEFT JOIN dbo.MstCountry MC 
+				ON MC.CountryId=CAD.CountryId 
+			WHERE (@ClientId IS NULL OR @ClientId = 0) OR cl.ClientId = @ClientId			
+			)		
+
+
+	SELECT *
+	INTO #Temp
+	FROM
+	(
+		SELECT DISTINCT ClientId,
+			ClientName,
+			isUsed,
+			ClientTypeId,
+			Addedon,
+			isActive,
+			JDENumber,
+			ACN,
+			ABN,
+			TradingName,
+			TrustName
+			FROM ClientCTE
+	) as Client_main
+	 
+		-- Get Client main details
+		SELECT * FROM #temp ORDER BY ClientId
+
+		-- Get Address details
+		SELECT  CAD.ClientId, 
+				CAD.IsPrimary, 
+				CAD.Address, 
+				CAD.CountryId, 
+				MC.CountryName,
+				CAD.StateId, 
+				CAD.CityId, 
+				CAD.PinCode, 
+				CAD.Street2, 
+				CAD.CityName, 
+				CAD.StateName, 
+				CAD.ClientAddressdetailId
+		FROM ClientAddressDetails CAD
+		LEFT JOIN dbo.MstCountry MC 
+		ON MC.CountryId=CAD.CountryId 
+		where clientid IN (Select ClientId FROM #temp) ORDER BY ClientId
+
+		-- Get Email Details
+		SELECT  ClientEmaildetailId, 
+				ClientId, 
+				IsPrimary, 
+				EmailID
+		FROM ClientEmaildetails where clientid IN (Select ClientId FROM #temp) ORDER BY ClientId
+
+		-- Get Contact Details
+		SELECT  ClientContactdetailId, 
+				ClientId, 
+				IsPrimary, 
+				ContactNumber
+		FROM ClientContactDetails where ClientId IN (Select ClientId FROM #temp) ORDER BY ClientId
+REVERT;
+END
