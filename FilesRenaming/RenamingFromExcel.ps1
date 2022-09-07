@@ -1,8 +1,8 @@
 ﻿Install-module "PSExcel"  
 
-$fileFolder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\Rev Rec Contracts" ###Path to the pdf files
-$ExcelFile = "C:\Users\ShubhamTaral\Downloads\Teradata_File_Naming_Convention_Final_Sheet.xlsx"  ###Path of Excel File 
-$Folder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\Rev Rec Contracts\RenamedFilesBackup"
+$fileFolder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\EMEA\EMEA" ###Path to the pdf files
+$ExcelFile = "C:\Users\ShubhamTaral\Downloads\Combine sheet for File naming convention_28th March 2022.xlsx"  ###Path of Excel File 
+$Folder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\EMEA\RenamedFilesBackup"
 $count=0
 
 
@@ -27,7 +27,7 @@ Function Search-Excel($Source, $SearchText) {
             if ($Value) {
                 if ($Value.trim() -eq $searchText) {  
                     if ($Sheet.Cells.Item($Row, $ColumnStart+1).Value){
-                        $renameTo = $Sheet.Cells.Item($Row, $ColumnStart+1).Value
+                        $renameTo = $Sheet.Cells.Item($Row, $ColumnStart+1).Value + ".pdf"
                         Write-Host $Value " ==> " $renameTo
                         return ($true, $renameTo)
                     }else{

@@ -21,4 +21,4 @@ function Send-ToEmail([string]$email){
     write-host "Mail Sent" ; 
 
  }
-Send-ToEmail  -email "reciever@gmail.com";
+Send-ToEmail  -email "shubham.taral@contractpodai.com";
