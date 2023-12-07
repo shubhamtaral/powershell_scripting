@@ -1,7 +1,7 @@
 Import-Module JiraPS
 
 # authenticate ayRktmRPwSMjdiINSzLjAECA
-$credential = Get-Credential -UserName 'shubham.taral@contractpodai.com' -Message "Add Token here"
+$credential = Get-Credential -UserName 'shubham.taral@.com' -Message "Add Token here"
 Set-JiraConfigServer 'https://newgalexy.atlassian.net'  # required since version 2.10
 New-JiraSession -Credential $credential
 
