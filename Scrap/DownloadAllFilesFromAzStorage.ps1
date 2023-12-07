@@ -58,6 +58,6 @@ function downloadFromAzStorage {
 }
 
 
-downloadFromAzStorage   'DefaultEndpointsProtocol=https;AccountName=contractpodwesteurope;AccountKey=QnjhkABO927MlxjPsfnoZVCA3ANYQ70CAfLT3IoLwDJEjqwSAmldkbYQIx1xNv1b7BQhWWHjcZConzLbcTDR6A==;EndpointSuffix=core.windows.net' `
-    'cl-qa' `
-    'D:\CognitiveExitBackup'
+downloadFromAzStorage   'DefaultEndpointsProtocol=https;AccountName=;AccountKey===;EndpointSuffix=core.windows.net' `
+    'qa' `
+    'D:\'
