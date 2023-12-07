@@ -10,7 +10,7 @@ let domain = "TEST";
 let AiRequestURL = `https://cpaiuat.contractpod.com/cpaimt_api/api/${domain}/v1/contractfile/airequest`;
 let RequestorUsername, RequestId, StorageFilename, IsFinalSignedCopy, IsPDF;
 let concurrency = 10;
-let TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRERGMTQ0OUNGMDg0QzRCOEQzNzg5MDg2QkMxNzk3OSIsInJvbGUiOiJTdXBlciBBZG1pbiIsIlVzZXJJZCI6IjEwODMiLCJuYmYiOjE2NjA4MDY2MTUsImV4cCI6MTY2MTg4NjYxNSwiaWF0IjoxNjYwODA2NjE1LCJpc3MiOiJDb250cmFjdFBvZEFpIiwiYXVkIjoidGVzdCJ9.shvD4q1FTwa_r_-x9a9NfRe-lyrfq8FNOQRoG3WwxKs"
+let TOKEN = ""
 
 // Funtions
 function createAPICalls(CSV_File, callback) {
