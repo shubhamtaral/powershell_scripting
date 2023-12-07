@@ -2,7 +2,7 @@
 
 
 $Username = "no-reply@contractpodai.com";
-$Password = "ZRnpl387QbFld$";
+$Password = "$";
 $path = "";
 
 function Send-ToEmail([string]$email){
