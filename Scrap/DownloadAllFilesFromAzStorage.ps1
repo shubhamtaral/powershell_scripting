@@ -59,5 +59,5 @@ function downloadFromAzStorage {
 
 
 downloadFromAzStorage   'DefaultEndpointsProtocol=https;AccountName=;AccountKey===;EndpointSuffix=core.windows.net' `
-    'qa' `
+    'this' `
     'D:\'
