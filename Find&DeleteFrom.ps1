@@ -49,7 +49,7 @@ $StartTime = (Get-Date)
 $funcDef = ${function:FindInFile}.ToString()
 1..6 | ForEach-Object -Parallel {
     ${function:FindInFile} = $using:funcDef
-    FindInFile "D:\powershell_scripting\QA_CL_QA$_.sql" 
+    FindInFile "D:\powershell_scripting\FILENAME" 
 }
 
 $EndTime = (Get-Date)
