@@ -1,7 +1,7 @@
 ﻿
 
 
-$Username = "no-reply@contractpodai.com";
+$Username = "";
 $Password = "$";
 $path = "";
 
@@ -21,4 +21,4 @@ function Send-ToEmail([string]$email){
     write-host "Mail Sent" ; 
 
  }
-Send-ToEmail  -email "shubham.taral@contractpodai.com";
+Send-ToEmail  -email "";
