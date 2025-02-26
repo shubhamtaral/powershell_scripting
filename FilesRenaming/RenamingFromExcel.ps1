@@ -1,8 +1,8 @@
 ﻿Install-module "PSExcel"  
 
-$fileFolder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\EMEA\EMEA" ###Path to the pdf files
-$ExcelFile = "C:\Users\ShubhamTaral\Downloads\Combine sheet for File naming convention_28th March 2022.xlsx"  ###Path of Excel File 
-$Folder = "C:\Users\ShubhamTaral\ContractPod Technologies Limited\Seema Thakur - Teradata\EMEA\RenamedFilesBackup"
+$fileFolder = "" ###Path to the pdf files
+$ExcelFile = "2022.xlsx"  ###Path of Excel File 
+$Folder = ""
 $count=0
 
 
